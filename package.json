@@ -1,0 +1,18 @@
+{
+  "name": "tradeflash-server",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "NODE_ENV=development node src/index.js",
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "express": "^4.21.0",
+    "morgan": "^1.10.0",
+    "ws": "^8.18.0",
+    "node-fetch": "^3.3.2"
+  }
+}
