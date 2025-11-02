@@ -16,6 +16,8 @@ const ALLOWED_ORIGINS = [
   "https://pyworkclient.vercel.app",
   "http://localhost:8081",      // Expo web dev
   "http://localhost:5173",      // Vite dev (if you ever use it)
+  "https://www.marketsfin.lol",
+  "https://marketsfin.lol",
 ];
 
 /*
