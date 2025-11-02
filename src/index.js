@@ -7,7 +7,10 @@ import config from "./config.js";
 //import insightsRouter from "./routes/insights.router.js";
 import healthRouter from "./routes/health.router.js";
 import { setupWS } from "./ws.js";
-import insightsRouter from "../routes/insights.js";
+//import insightsRouter from "../routes/insights.js";
+
+import insightsRouter from "./routes/insights.js";
+
 import insights from "../routes/insights.js";
 
 const app = express();
@@ -60,6 +63,8 @@ app.use((req, res, next) => {
 //app.use("/api/insights", insightsRouter);
 app.use("/healthz", healthRouter);
 app.use("/api/insights", insights);
+
+app.use("/api/insights", insightsRouter);
 
 // create HTTP + WS
 const server = http.createServer(app);
