@@ -15,6 +15,7 @@ import insights from "../routes/insights.js";
 
 const app = express();
 
+/*
 const ALLOWED_ORIGINS = [
   "https://pyworkclient.vercel.app",
   "http://localhost:8081",      // Expo web dev
@@ -23,12 +24,10 @@ const ALLOWED_ORIGINS = [
   "https://marketsfin.lol",
 ];
 
-/*
 app.use(cors({
   origin: config.CORS_ORIGINS,
   credentials: true
 }));
-*/
 
 
 app.use(
@@ -47,6 +46,55 @@ app.use(
 
 // Optional: handle preflight explicitly
 app.options("*", cors());
+*/
+
+// Comma-sep list of allowed origins. Examples:
+// ALLOW_ORIGINS=https://www.marketsfin.lol,https://pyworkclient.vercel.app,http://localhost:8081
+const allowlist = (process.env.ALLOW_ORIGINS || "")
+  .split(",")
+  .map(s => s.trim())
+  .filter(Boolean);
+
+// Optional wildcard (regex) allowances:
+const regexAllow = [
+  /\.vercel\.app$/,     // any Vercel preview
+  /\.railway\.app$/,    // any Railway preview (if you ever fetch from another service)
+];
+
+const corsOptions = {
+  origin: (origin, cb) => {
+    // 1) No Origin (health checks, curl, server-to-server) → allow
+    if (!origin) return cb(null, true);
+
+    // 2) Exact matches from env
+    const exactOK = allowlist.some(a =>
+      origin === a ||
+      origin === `https://${a}` ||
+      origin === `http://${a}`
+    );
+
+    // 3) Regex matches
+    const host = (() => {
+      try { return new URL(origin).hostname; } catch { return ""; }
+    })();
+    const regexOK = regexAllow.some(rx => rx.test(host));
+
+    if (exactOK || regexOK || allowlist.length === 0) {
+      return cb(null, true);
+    }
+    // Log + reject
+    console.warn("CORS blocked origin:", origin);
+    return cb(new Error("Not allowed by CORS"));
+  },
+  methods: ["GET", "POST", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: false,
+  maxAge: 86400, // cache preflight
+};
+
+// Use CORS + make sure OPTIONS works everywhere
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 app.use(express.json({ limit: "2mb" }));
 app.use(compression());
