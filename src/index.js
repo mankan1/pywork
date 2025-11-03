@@ -11,42 +11,9 @@ import { setupWS } from "./ws.js";
 
 import insightsRouter from "./routes/insights.js";
 
-import insights from "../routes/insights.js";
+// import insights from "../routes/insights.js";
 
 const app = express();
-
-/*
-const ALLOWED_ORIGINS = [
-  "https://pyworkclient.vercel.app",
-  "http://localhost:8081",      // Expo web dev
-  "http://localhost:5173",      // Vite dev (if you ever use it)
-  "https://www.marketsfin.lol",
-  "https://marketsfin.lol",
-];
-
-app.use(cors({
-  origin: config.CORS_ORIGINS,
-  credentials: true
-}));
-
-
-app.use(
-  cors({
-    origin(origin, cb) {
-      // allow no-origin (curl, mobile apps) and your whitelisted origins
-      if (!origin || ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
-      cb(new Error("Not allowed by CORS"));
-    },
-    methods: ["GET", "POST", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: false, // set true only if you actually use cookies/Authorization headers that require it
-  })
-);
-
-
-// Optional: handle preflight explicitly
-app.options("*", cors());
-*/
 
 // Comma-sep list of allowed origins. Examples:
 // ALLOW_ORIGINS=https://www.marketsfin.lol,https://pyworkclient.vercel.app,http://localhost:8081
@@ -110,7 +77,7 @@ app.use((req, res, next) => {
 // 🔌 Mount here (ensure this is BEFORE any 404 handler)
 //app.use("/api/insights", insightsRouter);
 app.use("/healthz", healthRouter);
-app.use("/api/insights", insights);
+// app.use("/api/insights", insights);
 
 app.use("/api/insights", insightsRouter);
 
